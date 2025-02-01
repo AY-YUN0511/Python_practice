@@ -1,0 +1,18 @@
+# https://leetcode.com/problems/koko-eating-bananas?envType=study-plan-v2&envId=leetcode-75
+# 875. Koko Eating Bananas
+
+class Solution:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
+        start = 1 #처음에 start를 0부터 했더니 에러! 속도가 0일수 없어서 1부터 시작
+        end = max(piles)
+        while start < end:
+            mid = (start+end) // 2  # 중간부터 시작
+            hour = 0
+            for i in range(len(piles)):
+                hour = hour + math.ceil(piles[i] / mid)
+
+            if hour <= h:  # h보다 작아지면 속도를 줄여본다
+                end = mid 
+            else:
+                start = mid + 1
+        return start
