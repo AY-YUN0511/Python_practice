@@ -1,0 +1,43 @@
+# https://leetcode.com/problems/implement-trie-prefix-tree?envType=study-plan-v2&envId=leetcode-75
+# 208. Implement Trie (Prefix Tree)
+
+class Trie:
+
+    def __init__(self):
+        self.root={} #empty dictionary
+
+    def insert(self, word: str) -> None:
+        curr=self.root
+
+        for i in range(len(word)): #한글자씩 이어 붙이면서 넣기
+            if word[i] not in curr: 
+                curr[word[i]]={}
+            curr=curr[word[i]]
+
+        curr['*']='' #끝났음을 나타냄
+
+    def search(self, word: str) -> bool:
+        curr=self.root
+        for i in range(len(word)):
+            if word[i] not in curr: #계속 확인하다가 단어가 달라지면 false
+                return False
+            curr=curr[word[i]] # 다음 단어 - 다음 단어로 들어가면서 확인
+
+        if '*' in curr : #끝까지 똑같이 나오면 true를 return
+            return True
+
+    def startsWith(self, prefix: str) -> bool:
+        curr=self.root
+        for i in range(len(prefix)):
+            if prefix[i] not in curr:
+                return False
+            curr=curr[prefix[i]]
+
+        return True #이거는 끝까지 갈 필요가 없으니까 앞 몇 문자만 똑같으면 true return
+
+
+# Your Trie object will be instantiated and called as such:
+# obj = Trie()
+# obj.insert(word)
+# param_2 = obj.search(word)
+# param_3 = obj.startsWith(prefix)
