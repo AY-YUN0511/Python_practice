@@ -1,0 +1,50 @@
+# https://leetcode.com/problems/total-cost-to-hire-k-workers/?envType=study-plan-v2&envId=leetcode-75
+# 2462. Total Cost to Hire K Workers
+
+from heapq import heappush, heappop
+
+class Solution:
+    def totalCost(self, costs: List[int], k: int, candidates: int) -> int:
+        left_hq = [] #왼쪽 오른쪽에 candidate 만큼 heap으로 넣어줄 예정
+        right_hq = []
+        n = len(costs)
+        ans = 0
+        left_idx = -1
+        right_idx = -1
+        if 2 * candidates < n:             #candidate 가 겹치지 않는 상황이면
+            left_idx = candidates          #양쪽 끝나는 다음 지점을 index로 지정해준다
+            right_idx = n - candidates - 1
+        for i in range(candidates):         #candidate 개수만큼 heap에 각각 넣어준다, 
+            heappush(left_hq, (costs[i], i))        # cost자체와 index함꼐 넣어준다
+        for i in range(n - 1, n - candidates - 1, -1):
+            heappush(right_hq, (costs[i], i))
+        
+        for _ in range(k):
+            left_cost, left_i = -1, -1    #initialization
+            right_cost, right_i = -1, -1
+            if left_hq:                      #left heap이 존재하면 가장 작은거를 빼준다
+                left_cost, left_i = heappop(left_hq)
+            if right_hq:
+                right_cost, right_i = heappop(right_hq)
+            if left_i == -1:                #left가 없는거니까 right cost를 answer에 더해준다
+                ans += right_cost
+            elif right_i == -1:
+                ans += left_cost
+            else:
+                if left_i == right_i:      #index가 똑같다면 왼쪽을 넣어준다
+                    ans += left_cost
+                else:
+                    if left_cost <= right_cost:            #index가 다르다면 
+                        ans += left_cost				# 더 작은 cost를 ans에 더하고
+                        heappush(right_hq, (right_cost, right_i))		#right cost, index는 다시 heap에 넣는다
+                        if left_idx <= right_idx and left_idx != -1:         #아직 candidate가 겹치지 않는 상황이라면
+                            heappush(left_hq, (costs[left_idx], left_idx))	#index를 하나 추가해주면서 새 값을 heap에 넣어준다
+                            left_idx += 1
+                    elif left_cost > right_cost:
+                        ans += right_cost
+                        heappush(left_hq, (left_cost, left_i))
+                        if left_idx <= right_idx and left_idx != -1:
+                            heappush(right_hq, (costs[right_idx], right_idx))
+                            right_idx -= 1
+            
+        return ans
