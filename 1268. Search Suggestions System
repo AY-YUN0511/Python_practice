@@ -1,0 +1,46 @@
+# https://leetcode.com/problems/search-suggestions-system?envType=study-plan-v2&envId=leetcode-75
+# 1268. Search Suggestions System
+
+class Trie:
+
+    def __init__(self):
+        self.root = {}  # Empty dictionary
+
+    def insert(self, word: str) -> None:
+        curr=self.root
+
+        for i in range(len(word)): #한글자씩 이어 붙이면서 넣기
+            if word[i] not in curr: 
+                curr[word[i]]={}
+            curr=curr[word[i]]
+
+        curr['*']='' #끝났음을 나타냄
+
+    def startsWith(self, prefix: str) -> bool:
+        curr=self.root
+        for i in range(len(prefix)):
+            if prefix[i] not in curr:
+                return False
+            curr=curr[prefix[i]]
+
+        return True #이거는 끝까지 갈 필요가 없으니까 앞 몇 문자만 똑같으면 true return
+
+class Solution:
+    def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
+        trie = Trie()
+        products.sort() #sort 이후 확인한다 문제에 적혀있음!
+        for i in range(len(products)):  #trie에 하나씩 넣어준다
+            trie.insert(products[i])
+
+        results = [[] for _ in range(len(searchWord))]
+        for i in range(len(searchWord)):
+            prefix = searchWord[:i+1] #앞 i개의 문자까지
+            count = 0
+            for s in range(len(products)):
+                if trie.startsWith(prefix) and products[s].startswith(prefix): #prefix가 동일하면 result에 append
+                    results[i].append(products[s])
+                    count += 1
+                    if count == 3: # 3개까지만 나타내라고 했으므로 3개가 되면 break
+                        break
+
+        return results
