@@ -1,0 +1,27 @@
+# https://leetcode.com/problems/combination-sum-iii?envType=study-plan-v2&envId=leetcode-75
+# 216. Combination Sum III
+
+class Solution:
+    def combinationSum3(self, k: int, n: int) -> List[List[int]]:
+        if k>n: #k개의 합으로 만들수없는 경우에는 그냥 빈거 return
+            return []
+        result = []
+        visited = [False]*(10) #1부터 9까지 보고싶어서 0 포함 10개 visited 생성
+
+        def dfs(start, temp, temp_sum):
+            if len(temp) == k and temp_sum == n: #길이가 꽉 차면 합이 n이 됐는지 확인, result에 더해준다
+                result.append(temp.copy())
+                return
+            
+            for i in range(start, 10):
+                if not visited[i]:
+                    visited[i] = True
+                    temp.append(i) #방문하고 temp에 추가
+
+                    dfs(i + 1, temp, temp_sum + i) #recursion으로 다음 숫자 넣어주기
+                    
+                    temp.pop() # 끝났으니까 pop 해주고 다음 숫자 더해주기
+                    visited[i] = False
+
+        dfs(1, [], 0) # 0번째 index부터 확인, temp는 아무것도 없는 빈 문자부터 시작
+        return result #dfs가 끝나면 최종 result array를 return 한다
