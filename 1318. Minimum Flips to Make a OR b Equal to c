@@ -1,0 +1,21 @@
+# https://leetcode.com/problems/minimum-flips-to-make-a-or-b-equal-to-c/?envType=study-plan-v2&envId=leetcode-75
+# 1318. Minimum Flips to Make a OR b Equal to c
+
+class Solution:
+    def minFlips(self, a: int, b: int, c: int) -> int:
+        ab_xor_c = (a | b) ^ c  # (a or b) xor c 
+        ans = 0
+
+        for i in range(32): # 10^9은 2^32 에 담긴다
+            mask = 1 << i  # creates a bitmask to isolate the ith bit in a, b, and c.
+                            # 숫자 하나씩 확인!
+
+            if ab_xor_c & mask: # 1이 나왔다면 xor 에서 다르다는 의미로 flip 필요
+                # a,b가 모두 1이고 c가 0인 경우는 a,b 둘다 flip
+                if (a & mask) and (b & mask):
+                    ans += 2
+                # 하나만 1인 경우는 한번만 flip!
+                else:
+                    ans += 1
+
+        return ans
