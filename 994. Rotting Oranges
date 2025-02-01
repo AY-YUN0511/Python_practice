@@ -1,0 +1,41 @@
+# https://leetcode.com/problems/rotting-oranges/?envType=study-plan-v2&envId=leetcode-75
+# 994. Rotting Oranges
+
+class Solution:
+    def orangesRotting(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        fresh = 0 # fresh orange개수
+        minute = 0
+        queue = deque()
+        
+        for i in range(rows):
+            for j in range(cols):
+                if grid[i][j] ==1 :
+                    fresh = fresh +1 # fresh 개수 확인
+                if grid[i][j] ==2 :
+                    queue.append((i, j))
+                    # rotten orange가 있으면 먼저 queue에 저장한다
+
+        if fresh == 0 : # 끝까지 확인했는데 fresh orange가 없으면 -1 return
+            return 0
+
+        else : # fresh orange가 있었다면 BFS 시작
+            while queue and fresh > 0:
+                minute = minute + 1 # 횟수를 한 번 추가 
+                for _ in range(len(queue)):
+                    row, col = queue.popleft() #queue의 왼쪽부터 방문 시작
+
+                    # (up, down, left, right)
+                    for right, up in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                        r, c = row + right, col + up
+
+                        if 0 <= r < rows and 0 <= c < cols: # 범위 안에 들어있는 동안
+                            if grid[r][c] == 1: #fresh orange이면
+                                grid[r][c] =2 # rotten이 되고
+                                queue.append((r, c)) # queue에 넣어준다
+                                fresh = fresh-1 # rotten이 되었으니 fresh 1 빼준다
+
+            if fresh != 0: #끝낼 수 없으면 -1을 return
+                return -1
+            else:
+                return minute # 끝냈으면 minute을 return
