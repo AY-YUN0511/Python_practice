@@ -1,0 +1,12 @@
+# https://leetcode.com/problems/unique-paths?envType=study-plan-v2&envId=leetcode-75
+# 62. Unique Paths
+
+class Solution:
+    def uniquePaths(self, m: int, n: int) -> int:
+        temp = [[1 for i in range(n+1)] for j in range(m+1)]
+        # 끝부분은 무조건 일직선으로 올거니까 시작할때 1로 initialization
+        for i in range(2, m+1):
+            for j in range(2, n+1):
+                temp[i][j] = temp[i][j-1] + temp[i-1][j]
+                #위에서 내려온거와 뒤에서 온거를 더해줍니다
+        return temp[m][n]
