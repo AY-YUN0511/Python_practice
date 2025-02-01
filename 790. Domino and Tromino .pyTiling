@@ -1,0 +1,37 @@
+# https://leetcode.com/problems/domino-and-tromino-tiling/description/?envType=study-plan-v2&envId=leetcode-75
+# 790. Domino and Tromino Tiling
+
+class Solution:
+    def numTilings(self, n: int) -> int:
+        if n ==1 :
+            return 1
+        elif n==2 : 
+            return 2
+        elif n==3 : 
+            return 5
+        else : 
+            temp = [0 for i in range(n+1)]
+            temp[0] = 0
+            temp[1] = 1
+            temp[2] = 2
+            temp[3] = 5
+            mod = 10**9 + 7
+            for i in range(4, n+1):
+                temp[i] = (2*temp[i - 1] + temp[i - 3]) % mod
+                # 그림 참고
+            return temp[-1]
+
+"""
+dpa[i] = dpa[i-1] + dp[i-2] => dpa[i] - dpa[i-1] = dp[i - 2] => dpa[i-1] - dpa[i-2] = dp[i-3]
+dp[i] = dp[i-1] + dp[i-2] + 2dpa[i-1]   // (1)
+dp[i-1] = dp[i-2] + dp[i-3] + 2dpa[i-2] // (2)
+
+위의 (1)번 식에서 (2)번 식을 빼주면,
+dp[i] - dp[i-1] = dp[i-1] + dp[i-2] - dp[i-2] - dp[i-3] + 2(dpa[i-1] - dpa[i-2])
+= dp[i-1] - dp[i-3] + 2dp[i-3]
+이 되고 다시 dp[i]를 기준으로 식을 정리하면,
+dp[i] = 2dp[i-1] + dp[i-3]
+가 됩니다.
+reference : 
+https://jaime-note.tistory.com/170?url=https://jaime-note.tistory.com/170
+"""
