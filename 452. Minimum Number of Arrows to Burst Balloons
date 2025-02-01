@@ -1,0 +1,16 @@
+#https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/?envType=study-plan-v2&envId=leetcode-75
+# 452. Minimum Number of Arrows to Burst Balloons
+
+class Solution:
+    def findMinArrowShots(self, points: List[List[int]]) -> int:
+        points.sort(key=lambda x: x[1]) #비슷한 인터벌끼리 붙어있도록 먼저 sort해준다
+        start = points[0][0] #initialization
+        end = points[0][1]
+        result = 1
+        for i in range(1, len(points)): #0으로 initialize했으니까 1부터 시작
+            if points[i][0]>end: #새로 확인한 interval이 non-overlapping이면 end를 늘려준다. result를 추가
+                end = points[i][1]
+                result = result+1
+            #else : #overlapping이면 remove 횟수에만 추가해준다. 
+            #    result = result+1
+        return result
