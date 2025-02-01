@@ -1,0 +1,36 @@
+# https://leetcode.com/problems/successful-pairs-of-spells-and-potions/?envType=study-plan-v2&envId=leetcode-75
+# 2300. Successful Pairs of Spells and Potions
+
+class Solution:
+    def successfulPairs(self, spells: List[int], potions: List[int], success: int) -> List[int]:
+        result = [0 for i in range(len(spells))]
+
+        potions.sort() # binary search 를 이용해야하니까 potion 을 sort한다
+        # spell 은 순서대로 result에 들어가야하니까 일단 둔다
+        for i in range(len(spells)):
+            start, end = 0, len(potions)-1
+            while start!=end+1:
+                mid = (start+end)//2
+                if spells[i]*potions[mid] < success:
+                    start = mid+1
+                else :
+                    end = mid-1
+            result[i] = len(potions) - start
+
+        return result
+
+"""
+# Binary Search
+def binary_search(L:list, v:any) ->int:
+    start, end = 0, len(L)-1
+    while start!= end+1:
+        mid = (start+end)//2
+        if L(mid)<v:
+            start = mid+1
+        else:
+            end = mid-1
+    if start<len(L) and L[start] ==v:
+        return start
+    else:
+        return -1
+"""
