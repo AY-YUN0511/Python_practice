@@ -1,0 +1,22 @@
+# https://leetcode.com/problems/daily-temperatures/?envType=study-plan-v2&envId=leetcode-75
+# 739. Daily Temperatures
+
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        result = [0 for _ in range(len(temperatures))]
+        stack = []
+
+        for i in range(len(temperatures)):
+            temp = temperatures[i]
+
+            while stack and temp > temperatures[stack[-1]]: #현재 온도가 더 따뜻한걸 찾음
+                j = stack.pop()
+                result[j] = i - j #warmer를 찾으면 i-j (며칠 후 따뜻해지는지) result에 저장
+            stack.append(i) #stack이 비었거나 현재 온도가 더 춥다면 일단 i를 stack에 저장
+        return result
+        '''
+        i=5 stack = [2,3,4] temp = temperature[5] = 72 72>69 -> stack에서 4를 pop result[4] = 5-4=1 
+            stack = [2,3] 72>71 stack에서 3을 pop result[3] = 2
+        i=6 stack = [2,5] temp = 76 76>69 -> stack에서 5를 pop result[5] = 6-5=1
+            stack = [2] 76>75 -> stack에서 2를 pop result[2] = 6-2 = 4
+        '''
