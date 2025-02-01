@@ -1,0 +1,71 @@
+# https://leetcode.com/problems/reorder-routes-to-make-all-paths-lead-to-the-city-zero?envType=study-plan-v2&envId=leetcode-75
+# 1466. Reorder Routes to Make All Paths Lead to the City Zero
+
+class Solution:
+    def minReorder(self, n: int, connections: List[List[int]]) -> int:
+        # Create a graph with indication of whether an edge needs reorientation
+        graph = {}
+        for a, b in connections:
+            if b in graph:
+                graph[b].append((a, False)) 
+                # 0으로 오도록 해야되니까 b는 false. 
+                # Road doesn't need reorientation
+            else:
+                graph[b] = [(a, False)]
+
+            if a in graph:
+                graph[a].append((b, True))  
+                # Road needs reorientation
+                # 0으로 오도록 해야하니까 a는 true, 방향을 바꿔줘야함
+            else:
+                graph[a] = [(b, True)]
+"""
+{
+  0: [(1, True), (4, False)],
+  1: [(0, False), (3, True)],
+  2: [(3, True)],
+  3: [(1, False), (2, False)],
+  4: [(0, True), (5, True)],
+  5: [(4, False)]
+}
+
+"""         
+
+        visited = [0] * n
+        stack = [0]
+        result = 0
+
+        while stack:
+            current_city = stack.pop()
+            visited[current_city] = 1
+            for next_city, needs_reorient in graph.get(current_city, []):
+                if not visited[next_city]:
+                    stack.append(next_city)
+                    if needs_reorient:
+                        result += 1
+                        # 방향을 바꿔야한다면 result 를 1 더해준다
+
+        return result
+
+"""
+First Iteration:
+
+current_city = 0 (popped from stack)
+visited = [1, 0, 0, 0, 0, 0]
+Iterate over connections from city 0:
+City 1 with needs_reorient = True: Increment result to 1, add city 1 to stack.
+City 4 with needs_reorient = False: Do not increment result, add city 4 to stack.
+Next Iterations:
+
+For city 1 (popped next):
+visited = [1, 1, 0, 0, 0, 0]
+City 3 with needs_reorient = True: Increment result to 2, add city 3 to stack.
+For city 4 (popped next):
+visited = [1, 1, 0, 0, 1, 0]
+City 0 with needs_reorient = True: Already visited, do nothing.
+City 5 with needs_reorient = True: Increment result to 3, add city 5 to stack.
+For city 3 (popped next):
+visited = [1, 1, 0, 1, 1, 0]
+City 1 with needs_reorient = False: Already visited, do nothing.
+City 2 with needs_reorient = False: Add city 2 to stack.
+"""
