@@ -1,0 +1,25 @@
+# https://leetcode.com/problems/number-of-provinces/?envType=study-plan-v2&envId=leetcode-75
+# 547. Number of Provinces
+
+class Solution:
+    def findCircleNum(self, isConnected: List[List[int]]) -> int:
+        visited = [0] * len(isConnected)
+        stack = []
+        result = 0      # province 수를 체크
+
+        for i in range(len(isConnected)):
+            if visited[i] == 0 : #i를 방문하지 않았따면
+                visited[i] = 1
+                stack.append(i)  # i를 stack에 넣어준다
+                result = result+1        # 새로 방문하기 시작하니까 result를 1 더해준다
+
+            while stack : # stack에 들어있는게 있다면 DFS로 파고 들어간다
+                current_room = stack.pop()
+                for j in range(len(isConnected[current_room])):
+                    if isConnected[current_room][j] == 1 and visited[j]==0:
+                        visited[j] = 1
+                        stack.append(j)
+                # 더 이상 stack에 남은게 없다면 위로 올라가서 새로 넣어주기를 한다
+
+
+        return result
