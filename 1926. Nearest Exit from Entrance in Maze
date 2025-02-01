@@ -1,0 +1,32 @@
+# https://leetcode.com/problems/nearest-exit-from-entrance-in-maze/?envType=study-plan-v2&envId=leetcode-75
+# 1926. Nearest Exit from Entrance in Maze
+
+class Solution:
+    def nearestExit(self, maze: List[List[str]], entrance: List[int]) -> int:
+        rows, cols = len(maze), len(maze[0])
+        queue = deque([(entrance[0], entrance[1])])  # (row, col)
+        step = 0
+        visited = [[0 for _ in range(cols)] for _ in range(rows)]
+        visited[entrance[0]][entrance[1]] = 1   
+        # 방문했는지 확인할 array 형성, 일단 entrance부터 방문
+
+        # BFS
+        while queue:
+            for _ in range(len(queue)):
+                row, col = queue.popleft() #queue의 왼쪽부터 방문 시작
+
+                if (row != entrance[0] or col != entrance[1]) and \
+                (row == 0 or row == rows - 1 or col == 0 or col == cols - 1): #exit 도착
+                    return step
+
+                # (up, down, left, right)
+                for right, up in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                    r, c = row + right, col + up
+
+                    if 0 <= r < rows and 0 <= c < cols: # 범위 안에 들어있는 동안
+                        if maze[r][c] == '.' and visited[r][c] == 0: #막혀있지 않고 방문하지 않았으면
+                            visited[r][c] =1 #방문하고
+                            queue.append((r, c)) # queue에 넣어준다
+            step = step + 1
+
+        return -1 #나갈 수 없으면 -1을 return
