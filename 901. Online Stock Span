@@ -1,0 +1,18 @@
+# https://leetcode.com/problems/online-stock-span/description/?envType=study-plan-v2&envId=leetcode-75
+# 901. Online Stock Span
+
+
+class StockSpanner:
+
+    def __init__(self):
+        self.stack = []
+
+    def next(self, price: int) -> int:
+        span = 1 #기본으로 1을 설정
+
+        while self.stack and price >= self.stack[-1][0]: #현재 가격보다 stack의 가격이 더 작으면 
+            span += self.stack.pop()[1] #stack의 마지막을 pop으로 없애주고 그 span을 더해준다
+
+        self.stack.append((price, span)) #현재 가격의 span을 확인했으면 stack에 append해준다
+
+        return span
